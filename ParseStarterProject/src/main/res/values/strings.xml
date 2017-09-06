@@ -13,6 +13,10 @@
 
     <string name="app_name">Parse Starter Project</string>
 
-    <string name="hello_world">Hello World!</string>
-    <string name="action_settings">Settings</string>
+    <string name="tv_login_login">or Signup</string>
+    <string name="tv_login_signup">or Login</string>
+    <string name="btn_login_login">Login</string>
+    <string name="btn_login_signup">Signup</string>
+    <string name="et_username">Username</string>
+    <string name="password">et_password</string>
 </resources>
