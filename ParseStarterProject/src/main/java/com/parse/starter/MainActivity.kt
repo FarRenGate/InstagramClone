@@ -8,24 +8,34 @@
  */
 package com.parse.starter
 
+import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.Toast
 import com.parse.ParseAnalytics
 
 import kotlinx.android.synthetic.main.activity_main.*
+import android.text.method.PasswordTransformationMethod
+import android.view.KeyEvent
+import android.view.inputmethod.InputMethodManager
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnKeyListener {
 
-    var isSignUp=true
+    var isSignUp=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btnLoginOrSignup.setOnClickListener(this)
         tvLoginOrSignup.setOnClickListener(this)
+        background.setOnClickListener(this)
+
+        etPassword.setOnKeyListener(this)
+
+        etPassword.setTypeface(Typeface.DEFAULT)
+        etPassword.setTransformationMethod(PasswordTransformationMethod())
 
         ParseAnalytics.trackAppOpenedInBackground(intent)
     }
@@ -35,16 +45,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view) {
             btnLoginOrSignup -> {
-                Toast.makeText(this,"ButtonClicked", Toast.LENGTH_SHORT).show()
                 if (isSignUp) {
-                    SignUpUser()
+                    signUpUser()
                 } else {
-                    LogInUser()
+                    logInUser()
                 }
 
             }
             tvLoginOrSignup -> {
-                Toast.makeText(this,"Text", Toast.LENGTH_SHORT).show()
                 if (isSignUp) {
                     btnLoginOrSignup.setText(getString(R.string.btn_login_login));
                     tvLoginOrSignup.setText(getString(R.string.tv_login_login))
@@ -54,16 +62,34 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 isSignUp=!isSignUp
             }
+            background -> {
+               var inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE)
+                       as InputMethodManager
+               inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken,0)
+            }
 
         } //To change body of created functions use File | Settings | File Templates.
     }
 
-    private fun LogInUser() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
+        if (p1==KeyEvent.KEYCODE_ENTER||p2!!.action==KeyEvent.ACTION_DOWN) {
+           onClick(btnLoginOrSignup)
+        }
+        return false
     }
 
-    fun SignUpUser() {
+    private fun logInUser() {
+        var username = etUsername.text.toString()
+         parseLogIn(etUsername.text.toString(),
+                 etPassword.text.toString(),
+                 this)//To change body of created functions use File | Settings | File Templates.
+    }
 
+    private fun signUpUser() {
+        var username = etUsername.text.toString()
+        parseSignUp(etUsername.text.toString(),
+                etPassword.text.toString(),
+                this)
     }
 
 }

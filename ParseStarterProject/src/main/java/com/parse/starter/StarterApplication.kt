@@ -29,27 +29,12 @@ class StarterApplication : Application() {
 
         // Add your initialization code here
         Parse.initialize(Parse.Configuration.Builder(applicationContext)
-                .applicationId("8b260cbb11b9d86b82cc8af7074bf5a9b775464c")
-                .clientKey("88be0047eda77b9182bb2bc720481e01e4804957")
-                .server("http://ec2-54-200-137-68.us-west-2.compute.amazonaws.com:80/parse/")
+                .applicationId("db9088f9651cfd0f5e9345fdbf2cc66336e27646")
+                .clientKey("b47b80ce15d98b0f5ba6f15ea5ca225a8ca210eb")
+                .server("http://ec2-54-191-82-61.us-west-2.compute.amazonaws.com:80/parse/")
                 .build()
         )
 
-
-        val `object` = ParseObject("ExampleObject")
-        `object`.put("myNumber", "123")
-        `object`.put("myString", "rob")
-
-        `object`.saveInBackground { ex ->
-            if (ex == null) {
-                Log.i("Parse Result", "Successful!")
-            } else {
-                Log.i("Parse Result", "Failed" + ex.toString())
-            }
-        }
-
-
-        ParseUser.enableAutomaticUser()
         val defaultACL = ParseACL()
         defaultACL.publicReadAccess = true
         defaultACL.publicWriteAccess = true
