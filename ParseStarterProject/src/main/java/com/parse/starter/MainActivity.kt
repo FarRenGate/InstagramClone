@@ -9,6 +9,7 @@
 package com.parse.starter
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -17,8 +18,10 @@ import com.parse.ParseAnalytics
 
 import kotlinx.android.synthetic.main.activity_main.*
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
+import com.parse.ParseUser
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnKeyListener {
@@ -38,6 +41,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnKeyListen
         etPassword.setTransformationMethod(PasswordTransformationMethod())
 
         ParseAnalytics.trackAppOpenedInBackground(intent)
+
+        if (ParseUser.getCurrentUser()!=null) {
+            runUserListActivity(this)
+        }
     }
 
 
@@ -45,12 +52,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnKeyListen
     override fun onClick(view: View?) {
         when (view) {
             btnLoginOrSignup -> {
-                if (isSignUp) {
-                    signUpUser()
-                } else {
-                    logInUser()
-                }
-
+                    loginOrSignUpUser()
             }
             tvLoginOrSignup -> {
                 if (isSignUp) {
@@ -72,24 +74,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnKeyListen
     }
 
     override fun onKey(p0: View?, p1: Int, p2: KeyEvent?): Boolean {
-        if (p1==KeyEvent.KEYCODE_ENTER||p2!!.action==KeyEvent.ACTION_DOWN) {
+        if (p1==KeyEvent.KEYCODE_ENTER && p2!!.action==KeyEvent.ACTION_DOWN) {
            onClick(btnLoginOrSignup)
         }
         return false
     }
 
-    private fun logInUser() {
-        var username = etUsername.text.toString()
-         parseLogIn(etUsername.text.toString(),
-                 etPassword.text.toString(),
-                 this)//To change body of created functions use File | Settings | File Templates.
-    }
 
-    private fun signUpUser() {
-        var username = etUsername.text.toString()
-        parseSignUp(etUsername.text.toString(),
-                etPassword.text.toString(),
-                this)
+    private fun loginOrSignUpUser() {
+        if (isSignUp) {
+            parseSignUp(etUsername.text.toString(),
+                    etPassword.text.toString(),
+                    this)
+        } else {
+            parseLogIn(etUsername.text.toString(),
+                    etPassword.text.toString(),
+                    this)
+        }
+
+
     }
 
 }
