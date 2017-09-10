@@ -29,8 +29,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:onClick="logOutClick"
-        android:text="Logout"
+        android:onClick="takePhoto"
+        android:text="Take a picture!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

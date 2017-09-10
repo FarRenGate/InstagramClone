@@ -70,13 +70,15 @@ fun runUserListActivity(context: Context) {
 
 fun updateUsers (mAdapter: ArrayAdapter<String>, lvUserList: ListView) {
     var query = ParseUser.getQuery()
+    query.whereNotEqualTo("username",ParseUser.getCurrentUser().getUsername())
+    query.addAscendingOrder("username")
     query.findInBackground({userList:List<ParseUser>?, e:ParseException? ->
         if (userList!=null) {
             mAdapter.clear()
             for (parseUser in userList) {
                 mAdapter.add(parseUser.getUsername())
-                lvUserList.invalidate()
             }
+            lvUserList.setAdapter(mAdapter)
         }
     })
 }
