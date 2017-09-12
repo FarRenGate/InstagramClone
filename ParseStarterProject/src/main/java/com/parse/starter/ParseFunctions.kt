@@ -2,10 +2,10 @@ package com.parse.starter
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
+import android.view.ViewGroup
+import android.widget.*
 import com.parse.*
 
 val ERROR_OCCURRED="Some error occurred"
@@ -73,7 +73,7 @@ fun updateUsers (mAdapter: ArrayAdapter<String>, lvUserList: ListView) {
     query.whereNotEqualTo("username",ParseUser.getCurrentUser().getUsername())
     query.addAscendingOrder("username")
     query.findInBackground({userList:List<ParseUser>?, e:ParseException? ->
-        if (userList!=null) {
+        if (userList!=null && e==null) {
             mAdapter.clear()
             for (parseUser in userList) {
                 mAdapter.add(parseUser.getUsername())
@@ -82,3 +82,30 @@ fun updateUsers (mAdapter: ArrayAdapter<String>, lvUserList: ListView) {
         }
     })
 }
+
+fun showPhotos(context: Context, username: String, linearLayoutImages: LinearLayout) {
+        var query = ParseQuery.getQuery<ParseObject>("Image")
+        query.whereEqualTo("username",username)
+        query.findInBackground { imageList:List<ParseObject>?, e:ParseException? ->
+            if (imageList!=null && e==null) {
+                for (image in imageList) {
+                    var imageFile = image.get("image") as ParseFile
+                    imageFile.getDataInBackground { data:ByteArray?, e:ParseException? ->
+                        if (data!=null && e==null) {
+                            var bmp = BitmapFactory.decodeByteArray(data,0,data.size)
+                            var imageView = ImageView(context)
+                            imageView.setLayoutParams(ViewGroup.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT
+                            ))
+                            imageView.setPadding(8,8,8,8)
+                            imageView.setImageBitmap(bmp)
+                            linearLayoutImages.addView(imageView)
+                        }
+                    }
+                }
+            }
+
+
+        }
+    }
